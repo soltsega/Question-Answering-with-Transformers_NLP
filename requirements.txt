@@ -1,0 +1,14 @@
+transformers
+datasets
+torch
+torchvision
+torchaudio
+streamlit
+pandas
+tqdm
+scikit-learn
+PyPDF2
+ipykernel
+fastapi
+uvicorn
+python-multipart
