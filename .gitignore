@@ -1,3 +1,7 @@
 docs/
 venv/
 src/preprocessing.py
+localenv
+data/squad_train_sample.csv
+src/data_loader.py
+02_preprocessing.ipynb
