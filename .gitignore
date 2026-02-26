@@ -5,3 +5,4 @@ localenv
 data/squad_train_sample.csv
 src/data_loader.py
 02_preprocessing.ipynb
+src/__pycache__/preprocessing.cpython-311.pyc
