@@ -1,2 +1,7 @@
 docs/
 venv/
+localenv/
+data/squad_train_sample.csv
+src/data_loader.py
+src/preprocessing.py
+src/__pycache__/preprocessing.cpython-311.pyc
