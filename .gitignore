@@ -9,3 +9,9 @@ src/__pycache__/preprocessing.cpython-311.pyc
 data/preprocessed/enhanced_sample.json
 data/preprocessed/preprocessing_summary.json
 data/preprocessed/validation_results.csv
+models/distilbert-squad-finetuned-pytorch/config.json
+.gitignore
+models/distilbert-squad-finetuned-pytorch/tokenizer.json
+models/distilbert-squad-finetuned-pytorch/training_config.json
+models/distilbert-squad-finetuned-pytorch/tokenizer_config.json
+models/distilbert-squad-finetuned-pytorch/model.safetensors
