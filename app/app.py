@@ -17,7 +17,6 @@ from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 # ── Page Config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="QA with Transformers",
-    page_icon="🤖",
     layout="wide",
 )
 
@@ -179,7 +178,7 @@ def _escape(text: str) -> str:
 # ── Sample data ──────────────────────────────────────────────────────────────
 SAMPLES = [
     {
-        "title": "🏈 Super Bowl 50",
+        "title": "Super Bowl 50",
         "context": (
             "Super Bowl 50 was an American football game to determine the champion of the "
             "National Football League (NFL) for the 2015 season. The American Football Conference "
@@ -190,7 +189,7 @@ SAMPLES = [
         "question": "Which NFL team represented the AFC at Super Bowl 50?",
     },
     {
-        "title": "🌍 Amazon Rainforest",
+        "title": "Amazon Rainforest",
         "context": (
             "The Amazon rainforest, alternatively the Amazon jungle, also known in English as Amazonia, "
             "is a moist broadleaf tropical rainforest in the Amazon biome that covers most of the Amazon "
@@ -201,7 +200,7 @@ SAMPLES = [
         "question": "How many square kilometers of the Amazon basin are covered by the rainforest?",
     },
     {
-        "title": "🧬 DNA Structure",
+        "title": "DNA Structure",
         "context": (
             "In 1953, James Watson and Francis Crick published a paper describing the double helix "
             "structure of DNA. Their model was based on X-ray diffraction data collected by Rosalind "
@@ -212,7 +211,7 @@ SAMPLES = [
         "question": "Who collected the X-ray diffraction data used by Watson and Crick?",
     },
     {
-        "title": "🚀 Apollo 11",
+        "title": "Apollo 11",
         "context": (
             "Apollo 11 was the spaceflight that first landed humans on the Moon. Commander Neil Armstrong "
             "and lunar module pilot Buzz Aldrin formed the American crew that landed the Apollo Lunar "
@@ -241,20 +240,20 @@ def main():
             unsafe_allow_html=True
         )
         st.markdown("---")
-        st.markdown("### 🤖 Model Info")
+        st.markdown("### Model Info")
         st.markdown(f"**Model**: DistilBERT-SQuAD")
         param_count = sum(p.numel() for p in model.parameters())
         st.markdown(f"**Parameters**: `{param_count:,}`")
         st.markdown(f"**Compute**: `{device}`")
         st.markdown("---")
-        st.markdown("### ✨ Try a Sample")
+        st.markdown("### Try a Sample")
         for i, sample in enumerate(SAMPLES):
             if st.button(sample["title"], key=f"sample_{i}", use_container_width=True):
                 st.session_state["context"] = sample["context"]
                 st.session_state["question"] = sample["question"]
                 
         st.markdown("---")
-        with st.expander("ℹ️ How it works"):
+        with st.expander("How it works"):
             st.info(
                 "This app uses a **DistilBERT** model fine-tuned on the SQuAD dataset. "
                 "When you ask a question, the model reads the context paragraph and "
@@ -263,7 +262,7 @@ def main():
 
     # ── Header ──
     st.markdown(
-        "<h1 style='text-align:center;'>🤖 Ask the AI: Question Answering</h1>",
+        "<h1 style='text-align:center;'>Ask the AI: Question Answering</h1>",
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -277,7 +276,7 @@ def main():
     col1, col2 = st.columns([1.5, 1], gap="large")
 
     with col1:
-        st.markdown("### 📄 Context Paragraph")
+        st.markdown("### Context Paragraph")
         context = st.text_area(
             "Context",
             value=st.session_state.get("context", ""),
@@ -287,7 +286,7 @@ def main():
         )
 
     with col2:
-        st.markdown("### ❓ Your Question")
+        st.markdown("### Your Question")
         question = st.text_area(
             "Question",
             value=st.session_state.get("question", ""),
@@ -296,7 +295,7 @@ def main():
             label_visibility="collapsed"
         )
         st.markdown("<br>", unsafe_allow_html=True)
-        run_btn = st.button("✨  Find Answer", type="primary", use_container_width=True)
+        run_btn = st.button("Find Answer", type="primary", use_container_width=True)
 
     # ── Inference & Display ──
     if run_btn:
@@ -307,20 +306,19 @@ def main():
             st.warning("Please enter a question to ask.")
             return
 
-        with st.spinner("🧠 Analyzing text..."):
+        with st.spinner("Analyzing text..."):
             answer, confidence, start, end = predict_answer(
                 context, question, tokenizer, model, device
             )
 
         if not answer:
-            st.error("😕 The model could not find an answer in the given context.")
+            st.error("The model could not find an answer in the given context.")
             return
 
-        st.balloons()
         st.markdown("<hr style='border:1px dashed #ccc; margin: 2rem 0;'>", unsafe_allow_html=True)
 
         # Answer card
-        st.markdown("<h2 style='text-align:center; color:#1B5E20;'>🎯 Here's what I found:</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align:center; color:#1B5E20;'>Here's what I found:</h2>", unsafe_allow_html=True)
         
         ans_col, conf_col = st.columns([3, 1])
         with ans_col:
@@ -336,7 +334,7 @@ def main():
 
         # Highlighted context
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("### 📖 Answer Extracted From Context:")
+        st.markdown("### Answer Extracted From Context:")
         st.markdown(highlight_answer(context, start, end), unsafe_allow_html=True)
 
 
