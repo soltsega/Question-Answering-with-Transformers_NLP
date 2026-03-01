@@ -1,0 +1,71 @@
+Question Answering with Transformers: Task List
+Phase 1: Project Setup & Requirements [x]
+ Research Project Requirements
+ Analyze 
+Task_description.txt
+ and documentation
+ Extract core requirements (BERT/DistilBERT, SQuAD v1.1)
+ Development Environment Setup
+ Create 
+requirements.txt
+ with core dependencies
+ Initialize project folder structure (data/, models/, src/)
+ Create initial Implementation Plan
+Phase 2: Data Acquisition & EDA [ ]
+ Dataset Preparation
+ Load SQuAD v1.1 via Hugging Face datasets
+ Create data loading scripts in src/data_loader.py
+ Exploratory Data Analysis (EDA)
+ Analyze context and question length distributions
+ Visualize sample contexts, questions, and answers
+ Check for data imbalances or missing spans
+Phase 3: Preprocessing & Tokenization [ ]
+ Tokenization Strategy
+ Initialize AutoTokenizer (DistilBERT/BERT)
+ Implement sliding window (doc-stride) for long contexts
+ Span Mapping
+ Map character-based answer start/end to token-based indices
+ Handle unanswerable questions (if using SQuAD v2.0 later)
+ Validate preprocessed samples
+Phase 4: Model Implementation & Fine-Tuning [ ]
+ Model Selection & Setup
+ Load AutoModelForQuestionAnswering
+ Configure training arguments (learning rate, batch size, epochs)
+ Training Pipeline
+ Implement fine-tuning loop using Trainer API or PyTorch
+ Save model checkpoints to models/
+ Monitor training and validation loss
+Phase 5: Evaluation & Error Analysis [x]
+ Metrics Calculation
+ Calculate Exact Match (EM) score
+ Calculate F1 score
+ Model Comparison
+ Compare DistilBERT vs BERT (optional bonus)
+ Performance Analysis
+ Identify common failure modes (short vs long answers)
+ Document final model performance
+Phase 6: Deployment (Streamlit App) [x]
+ Application Development
+ Create app/app.py for Streamlit interface
+ Integrate the fine-tuned model for inference
+ User Interface Design
+ Implement text area for context and input for question
+ Add highlighting for the extracted answer span
+Phase 7: Web Miniapp (React + FastAPI) [ ]
+ FastAPI Backend Development
+ Set up FastAPI project structure in web/backend/
+ Create API endpoints for model inference
+ Implement CORS and basic error handling
+ React Frontend Development
+ Initialize React app (Vite) in web/frontend/
+ Design interactive QA components (Context, Question, Answer)
+ Connect frontend to FastAPI endpoints
+ Add animations and premium styling (modern UI)
+Phase 8: Final Documentation [ ]
+ Final Report
+ Summarize project findings and model architecture
+ Create usage instructions in 
+README.md
+ Code Cleanup
+ Refactor and comment all source code
+ Generate final walkthrough/demo recording
