@@ -17,9 +17,66 @@ from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 # ── Page Config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="QA with Transformers",
-    page_icon="🔍",
+    page_icon="🤖",
     layout="wide",
 )
+
+# ── Custom CSS ───────────────────────────────────────────────────────────────
+st.markdown("""
+<style>
+    .main {
+        background-color: #f8f9fa;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .answer-box {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1B5E20;
+        background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+        padding: 20px 25px;
+        border-radius: 12px;
+        border-left: 8px solid #4CAF50;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 1rem;
+    }
+    .highlight {
+        background-color: #FFD54F;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+        box-shadow: 0 2px 4px rgba(255, 213, 79, 0.4);
+    }
+    .context-box {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
+    }
+    h1 {
+        color: #2c3e50;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+    .stProgress .st-bo {
+        background-color: #4CAF50;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 MODEL_DIR = os.path.join(os.path.dirname(__file__), "..", "models", "distilbert-squad-finetuned")
@@ -105,14 +162,12 @@ def highlight_answer(context: str, start: int, end: int) -> str:
     answer = context[start:end]
     after = context[end:]
     return (
-        f'<div style="line-height:1.8; font-size:1.05rem;">'
+        f'<div class="context-box">'
         f'{_escape(before)}'
-        f'<mark style="background-color:#FFD54F; padding:2px 4px; border-radius:4px; font-weight:600;">'
-        f'{_escape(answer)}</mark>'
+        f'<mark class="highlight">{_escape(answer)}</mark>'
         f'{_escape(after)}'
         f'</div>'
     )
-
 
 def _escape(text: str) -> str:
     """Escape HTML special characters, preserve newlines."""
@@ -156,6 +211,16 @@ SAMPLES = [
         ),
         "question": "Who collected the X-ray diffraction data used by Watson and Crick?",
     },
+    {
+        "title": "🚀 Apollo 11",
+        "context": (
+            "Apollo 11 was the spaceflight that first landed humans on the Moon. Commander Neil Armstrong "
+            "and lunar module pilot Buzz Aldrin formed the American crew that landed the Apollo Lunar "
+            "Module Eagle on July 20, 1969. Armstrong became the first person to step onto the lunar "
+            "surface six hours and 39 minutes later on July 21."
+        ),
+        "question": "When did the Apollo Lunar Module Eagle land on the Moon?",
+    }
 ]
 
 
@@ -166,91 +231,112 @@ def main():
 
     # ── Sidebar ──
     with st.sidebar:
-        st.markdown("## 🔍 QA with Transformers")
+        st.markdown(
+            """
+            <div style='text-align:center;'>
+                <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" width="80" style="margin-bottom:10px;">
+                <h2 style='margin-top:0;'>QA Transformers</h2>
+            </div>
+            """, 
+            unsafe_allow_html=True
+        )
         st.markdown("---")
-        st.markdown("### Model Info")
+        st.markdown("### 🤖 Model Info")
         st.markdown(f"**Model**: DistilBERT-SQuAD")
         param_count = sum(p.numel() for p in model.parameters())
-        st.markdown(f"**Parameters**: {param_count:,}")
-        st.markdown(f"**Device**: `{device}`")
+        st.markdown(f"**Parameters**: `{param_count:,}`")
+        st.markdown(f"**Compute**: `{device}`")
         st.markdown("---")
-        st.markdown("### Try a Sample")
+        st.markdown("### ✨ Try a Sample")
         for i, sample in enumerate(SAMPLES):
             if st.button(sample["title"], key=f"sample_{i}", use_container_width=True):
                 st.session_state["context"] = sample["context"]
                 st.session_state["question"] = sample["question"]
+                
+        st.markdown("---")
+        with st.expander("ℹ️ How it works"):
+            st.info(
+                "This app uses a **DistilBERT** model fine-tuned on the SQuAD dataset. "
+                "When you ask a question, the model reads the context paragraph and "
+                "extracts the most likely text span that answers your question."
+            )
 
     # ── Header ──
     st.markdown(
-        "<h1 style='text-align:center;'>🔍 Question Answering with Transformers</h1>",
+        "<h1 style='text-align:center;'>🤖 Ask the AI: Question Answering</h1>",
         unsafe_allow_html=True,
     )
     st.markdown(
-        "<p style='text-align:center; color:gray;'>"
-        "Paste a paragraph below. Ask a question. The model will extract the answer.</p>",
+        "<p style='text-align:center; color:#5f6368; font-size:1.2rem;'>"
+        "Provide a paragraph of text, and then ask me any question about it!</p>",
         unsafe_allow_html=True,
     )
-    st.markdown("---")
+    st.markdown("<br>", unsafe_allow_html=True)
 
     # ── Inputs ──
-    col1, col2 = st.columns([2, 1])
+    col1, col2 = st.columns([1.5, 1], gap="large")
 
     with col1:
+        st.markdown("### 📄 Context Paragraph")
         context = st.text_area(
-            "📄 Context Paragraph",
+            "Context",
             value=st.session_state.get("context", ""),
-            height=250,
+            height=280,
             placeholder="Paste your context paragraph here …",
+            label_visibility="collapsed"
         )
 
     with col2:
-        question = st.text_input(
-            "❓ Your Question",
+        st.markdown("### ❓ Your Question")
+        question = st.text_area(
+            "Question",
             value=st.session_state.get("question", ""),
-            placeholder="Type your question …",
+            height=120,
+            placeholder="What would you like to know?",
+            label_visibility="collapsed"
         )
-        st.markdown("")
-        run_btn = st.button("🚀  Get Answer", type="primary", use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        run_btn = st.button("✨  Find Answer", type="primary", use_container_width=True)
 
     # ── Inference & Display ──
     if run_btn:
         if not context.strip():
-            st.warning("Please provide a context paragraph.")
+            st.warning("Please provide a context paragraph first.")
             return
         if not question.strip():
-            st.warning("Please enter a question.")
+            st.warning("Please enter a question to ask.")
             return
 
-        with st.spinner("Thinking …"):
+        with st.spinner("🧠 Analyzing text..."):
             answer, confidence, start, end = predict_answer(
                 context, question, tokenizer, model, device
             )
 
         if not answer:
-            st.error("The model could not find an answer in the given context.")
+            st.error("😕 The model could not find an answer in the given context.")
             return
 
-        st.markdown("---")
+        st.balloons()
+        st.markdown("<hr style='border:1px dashed #ccc; margin: 2rem 0;'>", unsafe_allow_html=True)
 
         # Answer card
+        st.markdown("<h2 style='text-align:center; color:#1B5E20;'>🎯 Here's what I found:</h2>", unsafe_allow_html=True)
+        
         ans_col, conf_col = st.columns([3, 1])
         with ans_col:
-            st.markdown("### 💡 Answer")
             st.markdown(
-                f"<div style='font-size:1.5rem; font-weight:700; color:#1B5E20; "
-                f"background:#E8F5E9; padding:16px 20px; border-radius:10px; "
-                f"border-left:5px solid #4CAF50;'>{answer}</div>",
+                f"<div class='answer-box'>{answer}</div>",
                 unsafe_allow_html=True,
             )
         with conf_col:
-            st.markdown("### 📊 Confidence")
             # Normalize confidence to roughly 0-1 range (heuristic: sigmoid of score/10)
             norm_conf = 1 / (1 + np.exp(-confidence / 10))
-            st.metric("Score", f"{norm_conf:.1%}")
+            st.metric("Model Confidence", f"{norm_conf:.1%}")
             st.progress(float(norm_conf))
 
         # Highlighted context
-        st.markdown("### 📖 Context with Highlighted Answer")
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### 📖 Answer Extracted From Context:")
         st.markdown(highlight_answer(context, start, end), unsafe_allow_html=True)
 
 
