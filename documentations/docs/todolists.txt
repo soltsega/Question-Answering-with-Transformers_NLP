@@ -51,7 +51,7 @@ Phase 6: Deployment (Streamlit App) [x]
  User Interface Design
  Implement text area for context and input for question
  Add highlighting for the extracted answer span
-Phase 7: Web Miniapp (React + FastAPI) [ ]
+Phase 7: Web Miniapp (React + FastAPI) [x]
  FastAPI Backend Development
  Set up FastAPI project structure in web/backend/
  Create API endpoints for model inference
